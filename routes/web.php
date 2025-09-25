@@ -11,6 +11,7 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', [PrincipalController::class, 'home'])->name('index');
 Route::get('/sobre-nos', [SobreNosController::class, 'aboutUs'])->name('about');
 Route::get('/contato', [ContatoController::class, 'contact'])->name('contact');
+Route::post('/contato', [ContatoController::class, 'salvar'])->name('contact.salvar');
 
 // Grupo de Rotas do Admin
 Route::prefix('admin')->group(function () {

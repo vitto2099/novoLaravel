@@ -175,7 +175,7 @@ Exibição com Bootstrap Cards incluindo:
 - [Laravel Tinker Guide](https://magecomp.com/blog/laravel-tinker/) - Testes via Tinker
 
 
-## 🛠️ Comandos Úteis
+##  Comandos Úteis
 ```bash
 # Limpar cache de views
 php artisan view:clear

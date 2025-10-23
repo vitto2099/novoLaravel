@@ -1,152 +1,205 @@
-# Projeto Gestão Empresarial - Desenvolvimento Web II
+#  Projeto de Gestão Empresarial
 
-## Descrição do Projeto
+> Sistema de gerenciamento empresarial desenvolvido com Laravel e MySQL para a disciplina de Desenvolvimento Web II
 
-Este projeto tem como objetivo implementar a camada de persistência de dados de um sistema de gestão empresarial, utilizando **Laravel** e **MySQL**. Foram desenvolvidos:
+##  Sobre o Projeto
 
-- Models e Migrations para clientes e produtos;
-- Formulário de cadastro de clientes integrado à API **ViaCEP**;
-- Área administrativa para cadastro e listagem de produtos com upload de imagens;
-- Testes com **Tinker** para validação dos dados persistidos.
+Este projeto implementa a camada de persistência de dados de um sistema de gestão empresarial completo, incluindo:
+
+- Models e Migrations para clientes e produtos
+- Formulário de cadastro com integração ViaCEP
+- Área administrativa com upload de imagens
+- Validação e testes com Tinker
 
 ---
 
-## Parte 1: Estrutura do Banco de Dados (Models e Migrations)
+##  Estrutura do Banco de Dados
 
-### Configuração do Banco de Dados
+### Configuração Inicial
 
-- O arquivo `.env` foi configurado para conectar o Laravel a um banco de dados MySQL.
-- Comando utilizado para criar as tabelas:  
+Configure o arquivo `.env` com as credenciais do MySQL:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=seu_banco
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
 
+Execute as migrations:
 ```bash
 php artisan migrate
-Migration e Model de Clientes
-Tabela clientes com os seguintes campos:
+```
 
-nome (string)
+###  Tabela: Clientes
 
-sobrenome (string)
+| Campo | Tipo | Observação |
+|-------|------|------------|
+| nome | string | - |
+| sobrenome | string | - |
+| cpf | string | único |
+| email | string | único |
+| cep | string | - |
+| logradouro | string | - |
+| bairro | string | - |
+| cidade | string | - |
+| uf | string | 2 caracteres |
 
-cpf (string, único)
+**Model:** `Cliente.php`
 
-email (string, único)
+###  Tabela: Produtos
 
-cep (string)
+| Campo | Tipo | Observação |
+|-------|------|------------|
+| nome | string | - |
+| descricao | text | - |
+| preco | decimal | - |
+| imagem | string | caminho da imagem |
 
-logradouro (string)
+**Model:** `Produto.php`
 
-bairro (string)
+---
 
-cidade (string)
+##  Cadastro de Clientes
 
-uf (string, 2 caracteres)
+### Formulário
 
-Model correspondente: Cliente.php
+**Localização:** `resources/views/pages/cadastro.blade.php`
 
-Migration e Model de Produtos
-Tabela produtos com os seguintes campos:
+O formulário utiliza Bootstrap para estilização:
+- Classes: `form-control`, `form-label`, `mb-3`
+- Layout responsivo e intuitivo
 
-nome (string)
+###  Integração com ViaCEP
 
-descricao (text)
+O sistema preenche automaticamente os campos de endereço ao digitar o CEP:
+```javascript
+// Evento onblur no campo CEP
+// Preenche: logradouro, bairro, cidade, uf
+```
 
-preco (decimal)
-
-imagem (string) – caminho da imagem do produto
-
-Model correspondente: Produto.php
-
-Parte 2: Cadastro de Clientes com Integração ViaCEP
-Formulário de Cadastro
-Local: resources/views/pages/cadastro.blade.php
-
-Estilizado com Bootstrap (form-control, form-label, mb-3).
-
-Integração ViaCEP
-Ao digitar o CEP e sair do campo (onblur), os campos de logradouro, bairro, cidade e UF são preenchidos automaticamente via JavaScript.
-
-Observação: O CEP agora funciona automaticamente após limpar o cache das views.
-
-Controller e Lógica de Cadastro
-Recebe os dados via POST.
-
-Validações:
-
-CPF e Email únicos na tabela clientes.
-
-Campos obrigatórios preenchidos.
-
-Salva os dados no banco e redireciona para a página de sucesso ou login.
-
-Teste com Tinker
-php artisan tinker
-
-App\Models\Cliente::all();
-App\Models\Cliente::find(1);
-Parte 3: Área Administrativa - Cadastro e Listagem
-Listagem de Clientes
-Local: resources/views/pages/admin/clientes/index.blade.php
-
-Tabela HTML estilizada com Bootstrap (table, table-striped, table-hover) exibindo todos os clientes cadastrados.
-
-Cadastro de Produtos com Imagem
-Formulário em: admin/produtos/create
-
-Validação de dados e arquivo (tipo e tamanho).
-
-Imagem salva em storage/app/public/products.
-
-Caminho da imagem armazenado no campo imagem da tabela produtos.
-
-Comando executado para disponibilizar publicamente as imagens:
-
-bash
-php artisan storage:link
-Exibição de Produto na Área Pública
-Controller busca o produto pelo id ou slug.
-
-View: resources/views/pages/produtos/show.blade.php
-
-Detalhes exibidos com Bootstrap Cards: imagem, nome, descrição e preço.
-
-URLs de Teste
-Cadastro de cliente: http://127.0.0.1:8000/cadastro
-
-Lista de clientes: http://127.0.0.1:8000/admin/clientes
-
-Cadastro de produto: http://127.0.0.1:8000/admin/produtos/create
-
-Lista de produtos: http://127.0.0.1:8000/admin/produtos
-
-Fontes de Pesquisa
-
-https://github.com/MatheusAlvarez/API-ViaCEP
-https://github.com/viniciussanchez/viacep
-
-Documentação Oficial Laravel - Validation
-https://laravel.com/docs/10.x/validation
-
-Documentação Oficial Laravel - File Storage
-https://laravel.com/docs/10.x/filesystem
-
-File Upload in Laravel: Main Things You Need To Know
-https://www.youtube.com/watch?v=xN-CF7dzeyM
-
-Consumindo API ViaCEP com JavaScript
-"Como usar ViaCEP com JavaScript" - https://viacep.com.br/exemplo/javascript/
-
-Como configurar um banco de dados MySQL no Laravel
-https://www.youtube.com/watch?v=MvTQyeuKuCw
-
-LARAVEL 021 A IMPORTÂNCIA DAS CONFIGURAÇÕES NO ENV E NO DATABASE PHP
-https://www.youtube.com/watch?v=MvTQyeuKuCw
-
-Tinker
-https://magecomp.com/blog/laravel-tinker/
-
-
-Observações Finais
-Alguns problemas nas views foram resolvidos limpando o cache:
-
-bash
+**Troubleshooting:** Se o preenchimento não funcionar, limpe o cache:
+```bash
 php artisan view:clear
+```
+
+### Validações Implementadas
+
+- ✔️ CPF único no banco de dados
+- ✔️ Email único no banco de dados
+- ✔️ Todos os campos obrigatórios preenchidos
+- ✔️ Formato válido de CEP
+
+### Testando com Tinker
+```bash
+php artisan tinker
+```
+```php
+// Listar todos os clientes
+App\Models\Cliente::all();
+
+// Buscar cliente específico
+App\Models\Cliente::find(1);
+```
+
+---
+
+##  Área Administrativa
+
+### Listagem de Clientes
+
+**Rota:** `/admin/clientes`  
+**View:** `resources/views/pages/admin/clientes/index.blade.php`
+
+Tabela estilizada com:
+- `table`
+- `table-striped`
+- `table-hover`
+
+###  Cadastro de Produtos
+
+**Rota:** `/admin/produtos/create`
+
+#### Upload de Imagens
+```bash
+# Criar link simbólico para storage público
+php artisan storage:link
+```
+
+**Diretório de armazenamento:** `storage/app/public/products`
+
+#### Validações de Upload
+
+- Tipos permitidos: jpg, jpeg, png
+- Tamanho máximo configurável
+- Validação de dados obrigatórios
+
+### Exibição Pública de Produtos
+
+**Rota:** `/produtos/{id}`  
+**View:** `resources/views/pages/produtos/show.blade.php`
+
+Exibição com Bootstrap Cards incluindo:
+-  Imagem do produto
+-  Nome e descrição
+-  Preço formatado
+
+
+## Rotas Disponíveis
+
+| Descrição | URL |
+|-----------|-----|
+| Cadastro de Cliente | `http://127.0.0.1:8000/cadastro` |
+| Listar Clientes | `http://127.0.0.1:8000/admin/clientes` |
+| Cadastrar Produto | `http://127.0.0.1:8000/admin/produtos/create` |
+| Listar Produtos | `http://127.0.0.1:8000/admin/produtos` |
+
+
+## Referências e Fontes
+
+### Integração ViaCEP
+- [MatheusAlvarez/API-ViaCEP](https://github.com/MatheusAlvarez/API-ViaCEP) - Referência para consumo da API
+- [viniciussanchez/viacep](https://github.com/viniciussanchez/viacep) - Estrutura de retorno da API
+- [Exemplo JavaScript ViaCEP](https://viacep.com.br/exemplo/javascript/) - Base para o preenchimento automático
+
+### Documentação Laravel
+- [Validation](https://laravel.com/docs/10.x/validation) - Validações de formulário
+- [File Storage](https://laravel.com/docs/10.x/filesystem) - Upload e armazenamento de arquivos
+
+### Tutoriais em Vídeo
+- [File Upload in Laravel](https://www.youtube.com/watch?v=xN-CF7dzeyM) - Upload com validação
+- [Configurar MySQL no Laravel](https://www.youtube.com/watch?v=MvTQyeuKuCw) - Configuração do `.env`
+
+### Ferramentas
+- [Laravel Tinker Guide](https://magecomp.com/blog/laravel-tinker/) - Testes via Tinker
+
+
+## 🛠️ Comandos Úteis
+```bash
+# Limpar cache de views
+php artisan view:clear
+
+# Executar migrations
+php artisan migrate
+
+# Criar link simbólico do storage
+php artisan storage:link
+
+# Abrir Tinker
+php artisan tinker
+```
+
+##  Problemas Conhecidos e Soluções
+
+### Views não atualizando
+**Solução:**
+```bash
+php artisan view:clear
+```
+
+### Imagens não aparecem
+**Solução:**
+```bash
+php artisan storage:link
+```
